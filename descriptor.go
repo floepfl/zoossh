@@ -327,6 +327,10 @@ func ParseRawDescriptor(rawDescriptor string) (Fingerprint, GetDescriptor, error
 		case "accept":
 			descriptor.RawAccept += words[1] + " "
 			descriptor.RawExitPolicy += words[0] + " " + words[1] + "\n"
+
+		case "ntor-onion-key":
+			key, _ := Base64ToString(words[1])
+			descriptor.NTorOnionKey = key
 		}
 	}
 
