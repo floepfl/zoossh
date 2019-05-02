@@ -331,10 +331,23 @@ func ParseRawDescriptor(rawDescriptor string) (Fingerprint, GetDescriptor, error
 		case "ntor-onion-key":
 			key, _ := Base64ToString(words[1])
 			descriptor.NTorOnionKey = key
+
+		case "signing-key":
+			extractDerFromRsa(words, descriptor)
+
+		case "onion-key":
+			extractDerFromRsa(words, descriptor)
 		}
 	}
 
 	return descriptor.Fingerprint, func() *RouterDescriptor { return descriptor }, nil
+}
+
+
+func extractDerFromRsa(words []string, descriptor *RouterDescriptor) {
+	for i := 1; strings.Compare(words[i], "-----END") != 0; i++ {
+		descriptor.SigningKey += words[i]
+	}
 }
 
 // extractDescriptor is a bufio.SplitFunc that extracts individual router
