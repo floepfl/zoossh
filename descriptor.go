@@ -334,12 +334,6 @@ func ParseRawDescriptor(rawDescriptor string) (Fingerprint, GetDescriptor, error
 			key, _ := Base64ToString(words[1])
 			descriptor.NTorOnionKey = key
 
-		case "signing-key":
-			extractDerFromRsa(words, descriptor)
-
-		case "onion-key":
-			extractDerFromRsa(words, descriptor)
-
 		case "master-key-ed25519":
 			descriptor.EdKey = words[1]
 			descriptor.EdKeyUn64, _ = Base64ToString(words[1])
