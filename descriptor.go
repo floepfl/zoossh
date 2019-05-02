@@ -75,6 +75,8 @@ type RouterDescriptor struct {
 	OnionKey     string
 	NTorOnionKey string
 	SigningKey   string
+	EdKey string
+	EdKeyUn64 string
 
 	RawAccept     string
 	RawReject     string
@@ -337,7 +339,14 @@ func ParseRawDescriptor(rawDescriptor string) (Fingerprint, GetDescriptor, error
 
 		case "onion-key":
 			extractDerFromRsa(words, descriptor)
+
+		case "master-key-ed25519":
+			descriptor.EdKey = words[1]
+			descriptor.EdKeyUn64, _ = Base64ToString(words[1])
+
 		}
+
+
 	}
 
 	return descriptor.Fingerprint, func() *RouterDescriptor { return descriptor }, nil
@@ -345,7 +354,7 @@ func ParseRawDescriptor(rawDescriptor string) (Fingerprint, GetDescriptor, error
 
 
 func extractDerFromRsa(words []string, descriptor *RouterDescriptor) {
-	for i := 1; strings.Compare(words[i], "-----END") != 0; i++ {
+	for i := 2; strings.Compare(words[i], "-----END") != 0; i++ {
 		descriptor.SigningKey += words[i]
 	}
 }
